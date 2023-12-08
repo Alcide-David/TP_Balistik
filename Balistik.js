@@ -18,17 +18,17 @@ const balistik = {
       encrypted += index + ".";
     }
     
-    encrypted = this._salt + "." + encrypted + str.length + ".";
+    encrypted = this._salt + "." + encrypted + str.length;
     return encrypted;
   },
   decrypt: function (str) {
     let parts = str.split(".");
     if (parts[0] !== this._salt) {
-      throw new SaltError("Incorrect salt");
+      throw new ValueError("Incorrect salt");
     }
 
     if (parts.length - 2 !== parseInt(parts[parts.length - 1])) {
-      throw new LengthError("Invalid length");
+      throw new ValueError("Invalid length");
     }
 
     let decrypted = "";
@@ -63,20 +63,6 @@ class ValueError extends Error {
   }
 }
 
-class SaltError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "SaltError";
-  }
-}
-
-class LengthError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "LengthError";
-  }
-}
-
-// Usage examples
+// Test
 console.log(balistik.encrypt("balistik")); // "Ux00.1.0.11.8.18.19.8.10.8"
 console.log(balistik.decrypt("Ux00.02.14.3.8.13.6.6")); // "Coding"
